@@ -1,9 +1,5 @@
 extern crate clap;
 
-mod dispatcher;
-mod observer;
-mod runner;
-
 use clap::{App, Arg};
 fn main() {
     let matches = App::new("CI")
@@ -35,5 +31,6 @@ fn main() {
     let repo = matches.value_of("repo").unwrap();
 
     println!("{} {}", server, repo);
-    dispatcher::poll();
+
+    ci::observer::poll(repo);
 }
