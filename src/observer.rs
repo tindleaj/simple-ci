@@ -66,6 +66,7 @@ fn update_repo(repo: &str) -> Result<(), std::io::Error> {
 
     let new_commit_id = get_newest_commit_id(repo);
 
+    dbg!(&new_commit_id, &commit_id);
     if new_commit_id != commit_id {
         let mut file = File::create(".commit_id")?;
 
