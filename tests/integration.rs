@@ -4,4 +4,3 @@ extern crate ci;
 fn it_works() {
     assert!(true);
 }
-

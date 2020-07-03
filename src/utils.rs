@@ -3,12 +3,17 @@ pub enum DispatcherRequest {
     Dispatch(String),
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum DispatcherResponse {
     Ok,
+    ReceivedDispatch(String),
     Err,
 }
 
 pub fn communicate(host: &str, port: i32, request: DispatcherRequest) -> DispatcherResponse {
-    unimplemented!("Communicate with dispatcher over the network");
+    // TODO: make this do  something
+    match request {
+        DispatcherRequest::Dispatch(id) => DispatcherResponse::ReceivedDispatch(id),
+        DispatcherRequest::Status => DispatcherResponse::Ok,
+    }
 }

@@ -25,7 +25,9 @@ pub fn poll(repo: &str) {
                 file.read_to_string(&mut commit).unwrap();
 
                 println!("Sending new commit to dispatcher");
-                let _response = communicate("localhost", 8888, DispatcherRequest::Dispatch(commit));
+                let response = communicate("localhost", 8888, DispatcherRequest::Dispatch(commit));
+
+                dbg!(&response);
             }
         }
 
