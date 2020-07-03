@@ -1,21 +1,41 @@
 use crate::utils;
+
 use std::fs::{remove_file, File};
-use std::io::Write;
+use std::io::prelude::*;
 use std::path::Path;
 use std::process::Command;
+use utils::{communicate, DispatcherRequest, DispatcherResponse};
 
 /// Watches target repo for new commits
 pub fn poll(repo: &str) {
     loop {
-        update_repo(repo);
-        std::thread::sleep(std::time::Duration::from_millis(2_000));
+        if let Err(e) = update_repo(repo) {
+            panic!(e);
+        };
+
+        if Path::new(".commit_id").is_file() {
+            let status = communicate("localhost", 8888, DispatcherRequest::Status);
+
+            if status == DispatcherResponse::Ok {
+                let mut file = File::open(".commit_id").unwrap();
+                let mut commit = String::new();
+
+                file.read_to_string(&mut commit).unwrap();
+
+                let _response = communicate("localhost", 8888, DispatcherRequest::Dispatch(commit));
+            }
+        }
+
+        std::thread::sleep(std::time::Duration::from_millis(5000));
     }
 }
 
 /// Identify new commits and report them to the observer
 fn update_repo(repo: &str) -> Result<(), std::io::Error> {
     // Remove old .commit_id. we don't care about an error here
-    remove_file(".commit_id");
+    if let Err(_e) = remove_file(".commit_id") {
+        println!(".commit_id does not exist or could not be deleted")
+    }
 
     // Check to see if the target repo exists
     if !Path::new(repo).exists() {
