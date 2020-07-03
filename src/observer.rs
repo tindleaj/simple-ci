@@ -17,11 +17,14 @@ pub fn poll(repo: &str) {
             let status = communicate("localhost", 8888, DispatcherRequest::Status);
 
             if status == DispatcherResponse::Ok {
+                println!("Dispatcher is available");
+
                 let mut file = File::open(".commit_id").unwrap();
                 let mut commit = String::new();
 
                 file.read_to_string(&mut commit).unwrap();
 
+                println!("Sending new commit to dispatcher");
                 let _response = communicate("localhost", 8888, DispatcherRequest::Dispatch(commit));
             }
         }
@@ -66,6 +69,7 @@ fn update_repo(repo: &str) -> Result<(), std::io::Error> {
     if new_commit_id != commit_id {
         let mut file = File::create(".commit_id")?;
 
+        println!("New commit found, updating .commit_id");
         write!(&mut file, "{}", new_commit_id)?;
     }
 

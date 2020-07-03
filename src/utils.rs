@@ -10,5 +10,5 @@ pub enum DispatcherResponse {
 }
 
 pub fn communicate(host: &str, port: i32, request: DispatcherRequest) -> DispatcherResponse {
-    unimplemented!();
+    unimplemented!("Communicate with dispatcher over the network");
 }
