@@ -1,10 +1,21 @@
-use crate::utils;
-
+use super::utils::{communicate, DispatcherRequest, DispatcherResponse};
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::Path;
 use std::process::Command;
-use utils::{communicate, DispatcherRequest, DispatcherResponse};
+
+pub enum Response {
+    Ok,
+    ReceivedDispatch(String),
+    Err,
+}
+
+pub enum Request {
+    Status,
+    Dispatch(String),
+    Register,
+    Results,
+}
 
 /// Watches target repo for new commits
 pub fn poll(repo: &str) {

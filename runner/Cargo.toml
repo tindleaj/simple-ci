@@ -1,17 +1,10 @@
 [package]
 authors = ["Austin Tindle <tindleaj@gmail.com>"]
 edition = "2018"
-name = "ci"
+name = "runner"
 version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[workspace]
-members = ["dispatcher", "observer", "runner"]
-
 [dependencies]
 clap = "2.33.1"
-
-[[bin]]
-name = "dispatcher"
-path = "dispatcher/src/main.rs"

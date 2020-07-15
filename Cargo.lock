@@ -49,6 +49,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "dispatcher"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
 name = "hermit-abi"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -62,6 +69,20 @@ name = "libc"
 version = "0.2.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9457b06509d27052635f90d6466700c65095fdf75409b3fbdd903e988b886f49"
+
+[[package]]
+name = "observer"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
+
+[[package]]
+name = "runner"
+version = "0.1.0"
+dependencies = [
+ "clap",
+]
 
 [[package]]
 name = "strsim"
