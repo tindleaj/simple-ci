@@ -1,42 +1,27 @@
-use super::utils::{communicate, DispatcherRequest, DispatcherResponse};
+use ci::{communicate, DispatcherResponse, Request};
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::Path;
 use std::process::Command;
 
-pub enum Response {
-    Ok,
-    ReceivedDispatch(String),
-    Err,
-}
-
-pub enum Request {
-    Status,
-    Dispatch(String),
-    Register,
-    Results,
-}
-
 /// Watches target repo for new commits
-pub fn poll(repo: &str) {
+pub fn poll(repo: &str) -> Result<(), std::io::Error> {
     loop {
-        if let Err(e) = update_repo(repo) {
-            panic!(e);
-        };
+        update_repo(repo)?;
 
         if Path::new(".commit_id").is_file() {
-            let status = communicate("localhost", 8888, DispatcherRequest::Status);
+            let status = communicate("localhost", 8888, Request::Status)?;
 
             if status == DispatcherResponse::Ok {
                 println!("Dispatcher is available");
 
                 let mut file = File::open(".commit_id").unwrap();
-                let mut commit = String::new();
+                let mut commit_id = String::new();
 
-                file.read_to_string(&mut commit).unwrap();
+                file.read_to_string(&mut commit_id).unwrap();
 
-                println!("Sending new commit to dispatcher");
-                let response = communicate("localhost", 8888, DispatcherRequest::Dispatch(commit));
+                println!("Sending new commit_id to dispatcher");
+                let response = communicate("localhost", 8888, Request::Dispatch { commit_id })?;
 
                 dbg!(&response);
             }
@@ -44,6 +29,24 @@ pub fn poll(repo: &str) {
 
         std::thread::sleep(std::time::Duration::from_millis(5000));
     }
+}
+
+/// Notify the dispatcher that a new commit is available to test
+/// TODO: Remove this, it's for testing only
+pub fn notify() -> std::io::Result<()> {
+    // let res = communicate("127.0.0.1", 8888, Request::Status)?;
+    // println!("Response: {:?}", res);
+
+    let res = communicate(
+        "127.0.0.1",
+        8888,
+        Request::Dispatch {
+            commit_id: "1234".to_string(),
+        },
+    )?;
+    println!("Response: {:?}", res);
+
+    Ok(())
 }
 
 /// Identify new commits and report them to the observer
