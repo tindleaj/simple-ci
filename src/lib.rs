@@ -3,7 +3,6 @@ use std::io::prelude::*;
 use std::net::{Shutdown, TcpStream};
 
 #[derive(Serialize, Deserialize, Debug)]
-
 enum ActionType {
     Status,
 }

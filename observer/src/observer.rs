@@ -11,14 +11,16 @@ pub fn poll(repo: &str) -> Result<(), std::io::Error> {
 
         if Path::new(".commit_id").is_file() {
             let status = communicate("localhost", 8888, Request::Status)?;
+            dbg!(&status);
 
             if status == DispatcherResponse::Ok {
                 println!("Dispatcher is available");
 
-                let mut file = File::open(".commit_id").unwrap();
+                let mut file = File::open(".commit_id").expect("Problem opening .commit_id");
                 let mut commit_id = String::new();
 
-                file.read_to_string(&mut commit_id).unwrap();
+                file.read_to_string(&mut commit_id)
+                    .expect("Problem writing to .commit_id");
 
                 println!("Sending new commit_id to dispatcher");
                 let response = communicate("localhost", 8888, Request::Dispatch { commit_id })?;

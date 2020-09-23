@@ -1,3 +1,4 @@
+use ci::DispatcherResponse;
 use serde::{Deserialize, Serialize};
 use std::io::prelude::*;
 use std::net::{TcpListener, TcpStream};
@@ -9,13 +10,6 @@ pub enum Request {
     Dispatch { commit_id: String },
     Register,
     Results,
-}
-
-#[derive(PartialEq, Eq, Debug)]
-pub enum Response {
-    Ok,
-    ReceivedDispatch(String),
-    Err,
 }
 
 pub struct Dispatcher {
@@ -88,17 +82,34 @@ fn handle(mut stream: TcpStream) {
 
     match serde_json::from_str::<Request>(&buf) {
         Ok(req) => {
-            print!("Request: {:?}", req);
+            println!("Request: {:?}", req);
             match req {
                 Request::Status => {
-                    stream.write_all(b"OK").expect("Problem writing to stream");
+                    let res = serde_json::to_vec(&DispatcherResponse::Ok)
+                        .expect("Problem serializing response to JSON");
+
+                    stream.write_all(&res).expect("Problem writing to stream");
                     stream.flush().expect("Problem flushing stream");
                     stream
                         .shutdown(std::net::Shutdown::Write)
                         .expect("Problem shutting down write stream");
                     println!("Ok");
                 }
-                Request::Dispatch { commit_id } => {}
+                Request::Dispatch { commit_id } => {
+                    println!("Dispatching job to runner...");
+
+                    // TODO: Actually dispatch a test runner
+
+                    // Tell the observer we did the thing it wanted
+                    let res = serde_json::to_vec(&DispatcherResponse::ReceivedDispatch(commit_id))
+                        .expect("Problem serializing response to JSON");
+
+                    stream.write_all(&res).expect("Problem writing to stream");
+                    stream.flush().expect("Problem flushing stream");
+                    stream
+                        .shutdown(std::net::Shutdown::Write)
+                        .expect("Problem shutting down write stream")
+                }
                 Request::Register => {}
                 Request::Results => {}
             }
