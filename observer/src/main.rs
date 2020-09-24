@@ -33,6 +33,8 @@ fn main() {
 
     // println!("{} {}", server, repo);
 
-    observer::poll("../ci-observer-clone/").expect("poll crashed");
+    if let Err(e) = observer::poll("../ci-clone/") {
+        println!("Error: {}", e);
+    }
     // observer::notify();
 }
