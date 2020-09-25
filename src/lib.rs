@@ -2,6 +2,9 @@ use serde::{Deserialize, Serialize};
 use std::io::prelude::*;
 use std::net::{Shutdown, TcpStream};
 
+pub mod dispatcher;
+pub mod observer;
+
 #[derive(Serialize, Deserialize, Debug)]
 enum ActionType {
     Status,

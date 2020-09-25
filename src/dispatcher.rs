@@ -1,4 +1,4 @@
-use ci::DispatcherResponse;
+use crate::DispatcherResponse;
 use serde::{Deserialize, Serialize};
 use std::io::prelude::*;
 use std::net::{TcpListener, TcpStream};

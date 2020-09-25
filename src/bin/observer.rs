@@ -1,11 +1,10 @@
+//! SimpleCI Repository Observer
+
 use clap::{App, Arg};
 
-mod observer;
-
 fn main() {
-    // let matches = App::new("CI")
-    //     .author("Austin T. <tindleaj@gmail.com>")
-    //     .about("Simple CI program")
+    // let matches = App::new("Observer")
+    //     .about("simple-ci observer")
     //     .arg(
     //         Arg::with_name("dispatcher-server")
     //             .short("d")
@@ -33,7 +32,7 @@ fn main() {
 
     // println!("{} {}", server, repo);
 
-    if let Err(e) = observer::poll("../ci-clone/") {
+    if let Err(e) = cimple::observer::poll("../ci-clone/") {
         println!("Error: {}", e);
     }
     // observer::notify();

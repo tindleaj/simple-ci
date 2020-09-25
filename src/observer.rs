@@ -1,4 +1,4 @@
-use ci::{communicate, DispatcherResponse, Request};
+use crate::{communicate, DispatcherResponse, Request};
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::Path;

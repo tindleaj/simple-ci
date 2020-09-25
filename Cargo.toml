@@ -1,23 +1,10 @@
 [package]
 authors = ["Austin Tindle <tindleaj@gmail.com>"]
 edition = "2018"
-name = "ci"
+name = "cimple"
 version = "0.1.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[workspace]
-members = ["dispatcher", "observer", "runner"]
-
 [dependencies]
-clap = "2.33.1"
+clap = "2"
 serde = {version = "1.0.114", features = ["derive"]}
 serde_json = "1.0.56"
-
-[[bin]]
-name = "dispatcher"
-path = "dispatcher/src/main.rs"
-
-[[bin]]
-name = "observer"
-path = "observer/src/main.rs"
