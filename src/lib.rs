@@ -1,3 +1,12 @@
+//! cimple - Simple Continuous Integration
+//!
+//! cimple includes three binaries that work together to create the CI system:
+//!
+//! - [dispatcher](../dispatcher/index.html): delegates testing tasks and returns results
+//! - [observer](../observer/index.html): monitors a repository and notifies the dispatcher when a new commit is seen
+//! - [runner](../runner/index.html): responsible for running tests against a given commit ID and returning the results
+//!
+
 use serde::{Deserialize, Serialize};
 use std::io::prelude::*;
 use std::net::{Shutdown, TcpStream};
