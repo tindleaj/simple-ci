@@ -8,6 +8,7 @@
 //!
 
 use serde::{Deserialize, Serialize};
+use std::error::Error;
 use std::io::prelude::*;
 use std::net::{Shutdown, TcpStream};
 
@@ -15,28 +16,21 @@ pub mod dispatcher;
 pub mod observer;
 
 #[derive(Serialize, Deserialize, Debug)]
-enum ActionType {
-    Status,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
 pub enum Request {
     Status,
     Dispatch { commit_id: String },
+    Register,
+    Results,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Debug)]
-pub enum DispatcherResponse {
+pub enum Response {
     Ok,
     ReceivedDispatch(String),
     Err,
 }
 
-pub fn communicate(
-    host: &str,
-    port: i32,
-    request: Request,
-) -> Result<DispatcherResponse, std::io::Error> {
+pub fn communicate(host: &str, port: i32, request: Request) -> Result<Response, Box<dyn Error>> {
     let mut stream = TcpStream::connect(&format!("{}:{}", host, port.to_string()))?;
 
     let mut buf = String::new();

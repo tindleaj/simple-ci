@@ -1,16 +1,7 @@
-use crate::DispatcherResponse;
-use serde::{Deserialize, Serialize};
+use crate::{Request, Response};
 use std::io::prelude::*;
 use std::net::{TcpListener, TcpStream};
 use std::thread;
-
-#[derive(Serialize, Deserialize, Debug)]
-pub enum Request {
-    Status,
-    Dispatch { commit_id: String },
-    Register,
-    Results,
-}
 
 pub struct Dispatcher {
     runners: Vec<String>,
@@ -85,7 +76,7 @@ fn handle(mut stream: TcpStream) {
             println!("Request: {:?}", req);
             match req {
                 Request::Status => {
-                    let res = serde_json::to_vec(&DispatcherResponse::Ok)
+                    let res = serde_json::to_vec(&Response::Ok)
                         .expect("Problem serializing response to JSON");
 
                     stream.write_all(&res).expect("Problem writing to stream");
@@ -101,7 +92,7 @@ fn handle(mut stream: TcpStream) {
                     // TODO: Actually dispatch a test runner
 
                     // Tell the observer we did the thing it wanted
-                    let res = serde_json::to_vec(&DispatcherResponse::ReceivedDispatch(commit_id))
+                    let res = serde_json::to_vec(&Response::ReceivedDispatch(commit_id))
                         .expect("Problem serializing response to JSON");
 
                     stream.write_all(&res).expect("Problem writing to stream");

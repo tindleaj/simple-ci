@@ -1,11 +1,12 @@
-use crate::{communicate, DispatcherResponse, Request};
+use crate::{communicate, Request, Response};
+use std::error::Error;
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::path::Path;
 use std::process::Command;
 
 /// Watches target repo for new commits
-pub fn poll(repo: &str) -> Result<(), std::io::Error> {
+pub fn poll(repo: &str) -> Result<(), Box<dyn Error>> {
     loop {
         update_repo(repo)?;
 
@@ -13,7 +14,7 @@ pub fn poll(repo: &str) -> Result<(), std::io::Error> {
             let status = communicate("localhost", 8888, Request::Status)?;
             println!("Dispatcher status: {:#?}", status);
 
-            if status == DispatcherResponse::Ok {
+            if status == Response::Ok {
                 let mut file = File::open(".commit_id")?;
                 let mut commit_id = String::new();
 
@@ -31,7 +32,7 @@ pub fn poll(repo: &str) -> Result<(), std::io::Error> {
 }
 
 /// Identify new commits and report them to the observer
-fn update_repo(repo: &str) -> Result<(), std::io::Error> {
+fn update_repo(repo: &str) -> Result<(), Box<dyn Error>> {
     // Remove old .commit_id if it exists
     if File::open(".commit_id").is_ok() {
         remove_file(".commit_id")?
@@ -71,7 +72,7 @@ fn update_repo(repo: &str) -> Result<(), std::io::Error> {
     Ok(())
 }
 
-fn get_newest_commit_id(repo: &str) -> Result<String, std::io::Error> {
+fn get_newest_commit_id(repo: &str) -> Result<String, Box<dyn Error>> {
     // get the most recent local commit
     let commit = Command::new("git")
         .current_dir(repo)
