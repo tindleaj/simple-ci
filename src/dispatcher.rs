@@ -58,6 +58,8 @@ impl Dispatcher {
     }
 }
 
+// TODO: handle, check, and redistribute should be associated functions in Dispatcher
+
 // Impl Drop to handle hearbeat and redistributor joins
 
 /// Handle incoming requests on their own thread
@@ -112,9 +114,12 @@ fn handle(mut stream: TcpStream) {
 // Periodically ping each registered test runner, if they are unresponsive then remove it from the pool and add
 // its commit id back to the pending list of commits
 fn check() {
-    println!("check")
+    // TODO: implement a check for each test runner to determine if they are
+    // responsive
+    println!("check");
 }
 
 fn redistribute() {
-    println!("redistribute")
+    // TODO: any commit_ids in the queue should be redistributed to new test runners
+    println!("redistribute");
 }
