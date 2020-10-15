@@ -12,7 +12,6 @@ pub fn poll(repo: &str) -> Result<(), Box<dyn Error>> {
 
         if Path::new(".commit_id").is_file() {
             let status = communicate("localhost", 8888, Request::Status)?;
-            println!("Dispatcher status: {:#?}", status);
 
             if status == Response::Ok {
                 let mut file = File::open(".commit_id")?;
@@ -20,7 +19,6 @@ pub fn poll(repo: &str) -> Result<(), Box<dyn Error>> {
 
                 file.read_to_string(&mut commit_id)?;
 
-                println!("Sending commit_id `{}` to dispatcher", commit_id);
                 let response = communicate("localhost", 8888, Request::Dispatch { commit_id })?;
 
                 dbg!(&response);

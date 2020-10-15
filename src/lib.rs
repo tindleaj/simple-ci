@@ -35,17 +35,22 @@ pub fn communicate(host: &str, port: i32, request: Request) -> Result<Response, 
 
     let mut buf = String::new();
 
-    println!("Sending request: {:#?}", request);
+    println!(
+        "Sending request to {}:{}. Payload: {:#?}",
+        host, port, request
+    );
 
     stream.write_all(serde_json::to_string(&request)?.as_bytes())?;
     stream.flush()?;
     stream.shutdown(Shutdown::Write)?;
 
     stream.read_to_string(&mut buf)?;
-
     let dispatcher_response = serde_json::from_str(&buf)?;
 
-    println!("Recieved response: {:?}", dispatcher_response);
+    println!(
+        "Recieved response from {}:{}: {:?}",
+        host, port, dispatcher_response
+    );
 
     Ok(dispatcher_response)
 
